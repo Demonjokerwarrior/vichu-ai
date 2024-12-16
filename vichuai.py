@@ -5,6 +5,7 @@ import webbrowser  # For opening URLs in a web browser
 from datetime import datetime
 from gtts import gTTS
 import playsound
+import speech_recognition as sr  # For voice recognition
 
 def speak(text):
     """Convert text to speech."""
@@ -15,9 +16,22 @@ def speak(text):
     os.remove(filename)
 
 def get_command():
-    """Get user input and convert it to lowercase."""
-    command = input("You: ")
-    return command.lower()
+    """Capture voice input and convert it to lowercase text."""
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = recognizer.listen(source)
+
+    try:
+        command = recognizer.recognize_google(audio)
+        print(f"You: {command}")
+        return command.lower()
+    except sr.UnknownValueError:
+        speak("Sorry, I did not understand that.")
+        return ""
+    except sr.RequestError:
+        speak("There was an error with the voice service.")
+        return ""
 
 def run_local_gpt(command):
     """Run the local GPT model and return the response."""
@@ -110,6 +124,42 @@ def open_camphish():
         print(f"Error: {e}")
         speak("I couldn't open CamPhish.")
 
+def play_song_in_new_terminal(song_name):
+    """
+    Open a new terminal and play a song using the ytfxf command.
+
+    Args:
+        song_name (str): Name of the song to play.
+    """
+    if not song_name:
+        print("No song name provided.")
+        return
+
+    ytfxf_command = f"ytfzf -t \"{song_name}\""
+
+    try:
+        if os.name == 'posix':  # Linux/MacOS
+            subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', ytfxf_command])
+        elif os.name == 'nt':  # Windows
+            subprocess.Popen(['start', 'cmd', '/K', ytfxf_command], shell=True)
+        print(f"Playing {song_name} now.")
+    except Exception as e:
+        print(f"Error opening terminal: {e}")
+
+def mouse():
+    """Open CamPhish in a new terminal."""
+    mouse = "python3 hand-mouse.py"  # Command to run CamPhish
+    try:
+        if os.name == 'posix':  # Linux, macOS
+            # Open CamPhish command in a new terminal
+            subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', mouse ])
+            speak("mouse is now running.")
+        elif os.name == 'nt':  # Windows
+            speak("This script is not supported on Windows.")
+    except Exception as e:
+        print(f"Error: {e}")
+        speak("I couldn't open mouse.")
+
 def perform_search(search_term):
     """Open Firefox and search for the given term."""
     url = f"https://www.google.com/search?q={search_term}"
@@ -128,10 +178,18 @@ def run_terminal_command(command):
         print(f"Error: {e}")
         speak("I couldn't run the command in a new terminal.")
 
+def close_current_window():
+    """Close the current terminal window."""
+    speak("Closing the current window.")
+    if os.name == 'posix':  # Linux
+        os.system("xdotool getactivewindow windowclose")  # Ensure xdotool is installed
+    elif os.name == 'nt':  # Windows
+        os.system("taskkill /F /IM cmd.exe")  # Adjust as needed for your terminal
+
 def perform_action(command):
     """Perform actions based on user commands."""
-    if "vichu" in command:
-        command = command.replace("vichu", "").strip()
+    if "juli" in command:
+        command = command.replace("juli", "").strip()
 
         if "date" in command:
             current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -172,22 +230,59 @@ def perform_action(command):
         elif "code" in command:
             response = run_local_gpt(command)
             if response:
-                print(f"Here is the code: {response}")
-                speak(f"Here is the code: {response}")
-            else:
-                response = "I'm not sure how to respond to that."
-                print(response)
+                print(f"Here is the response: {response}")
                 speak(response)
 
-        elif "start listener" in command:
+        elif "listener" in command:
             start_listener()
 
-        elif "smile please" in command:
+        elif "camphish" in command:
             open_camphish()
 
+        elif "song" in command:
+            # Extract song name and play
+            song_name = command.replace("song", "").strip()
+            play_song_in_new_terminal(song_name)
+
+        elif "mouse" in command:
+            mouse()
+    else:
+        speak("Please say 'juli' before your command.")
+
+
+def main():
+    """Main function to choose between voice or command-line mode."""
+    speak("Welcome! Would you like to use voice commands or the command line?")
+    print("Choose mode:\n1. Voice Commands\n2. Command Line")
+
+    mode = input("Enter your choice (1 for Voice, 2 for Command Line): ").strip()
+
+    if mode == "1":
+        speak("You have selected voice commands. I am ready to listen.")
+        while True:
+            command = get_command()
+            if command:
+                perform_action(command)
+    elif mode == "2":
+        speak("You have selected command line mode. Please enter your commands.")
+        while True:
+            command = input("Enter your command: ").strip()
+            if command:
+                perform_action(command)
+    else:
+        speak("Invalid choice. Please restart the program and choose a valid option.")
+        print("Invalid choice. Exiting...")
+
 if __name__ == "__main__":
-    speak("Hello, I am Vichu. What is our schedule?")
+    main()
+
+if __name__ == "__main__":
     while True:
+        # Get the command from the user
         command = get_command()
+
+        # If the command is empty or invalid, continue listening for valid input
         if command:
             perform_action(command)
+        else:
+            speak("I couldn't hear your command clearly, please try again.")
