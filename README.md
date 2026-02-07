@@ -1,182 +1,460 @@
-Nice project — this is a **full-blown desktop AI assistant**, not a toy 😄
-Here’s a clean, professional **`README.md`** you can drop straight into your GitHub repo.
+# JULI — Intelligent Voice & Command Line Automation Assistant
+
+JULI is a modular AI-powered automation assistant designed for **voice control, system automation, pentest lab workflows, productivity tasks, OCR screen reading, macro recording, and AI-driven responses**.
+
+It integrates speech recognition, TTS, system automation, browser control, email drafting, pentest lab tooling, and AI model interaction (via Ollama + DeepSeek).
+
+Built for developers, security learners, automation engineers, and AI experimenters.
 
 ---
 
-# 🤖 Juli – Intelligent Desktop Voice Assistant
+# 🚀 Features
 
-**Juli** is an advanced Python-based desktop assistant that combines voice control, automation, AI-powered text generation, system monitoring, macros, and emotional interaction into a single unified tool.
-It is designed for Linux systems (GNOME recommended) and integrates deeply with the OS.
+## 🎤 Voice + Command Mode
 
----
+* Voice command recognition
+* Command line interaction mode
+* Natural command routing
+* Spoken responses using TTS
 
-## ✨ Features
+## 🤖 AI Capabilities
 
-### 🎙️ Voice & Command-Line Control
+* AI text answers
+* AI emotional responses
+* AI email drafting
+* AI education guidance
+* AI screen summarization
+* AI error log analysis
+* AI code generation & execution
 
-* Wake-word based command execution (`"juli"`)
-* Google Speech Recognition
-* Text-to-Speech responses (gTTS)
+## 🖥 System Automation
 
-### 📧 Smart Email Assistant
+* File listing
+* Directory opening
+* Terminal command execution
+* Browser search
+* App launching
+* Macro recording & playback
+* Mouse & keyboard automation
 
-* AI-drafted email bodies using **DeepSeek (via Ollama)**
-* Automatic subject generation
-* Gmail SMTP integration
+## 📧 Email Automation
 
-### 🧠 AI Capabilities
+* AI-generated email body
+* Gmail SMTP sending
+* Subject auto-generation
 
-* Code generation & execution
-* Screen text reading + AI summarization
-* Emotional, motivational, and comforting responses
+## 🧠 OCR Screen Reader
+
+* Wayland/GNOME compatible screenshot capture
+* OCR via Tesseract
+* AI summarization
+
+## 🎵 Media
+
+* Play songs via mpv + YouTube search
+* Gesture mouse support
+* Sign-to-text project launcher
+
+## 🛠 Pentest Lab Toolkit (Lab Use Only)
+
+* Nmap scanning
+* Web enumeration
+* Linux privilege enum
+* Exploit search
+* Metasploit launcher
+* OWASP ZAP spider & active scan
+* CTF workspace builder
+* Scan analysis with AI
+
+## 📅 Productivity
+
+* Appointment recorder
+* Payment tracker
+* Support ticket creator
+* Bus ticket request logging
 * Education & career guidance
-* Health-related Q&A
 
-### 🖥️ System & File Operations
+## 🧩 Extensible
 
-* List and open directories
-* Monitor CPU & memory usage
-* Run terminal commands in new windows
-* Scheduled jobs (interval & cron-like)
-
-### 🧩 Automation & Macros
-
-* Record mouse & keyboard macros
-* Replay macros with precise timing
-* Emergency stop during playback (F8)
-
-### 📅 Productivity Tools
-
-* Appointment recording
-* Payment requests
-* Bus ticket requests
-* Support / grievance logging
-
-### 🎵 Media & Browser
-
-* Play YouTube songs via `mpv`
-* Google search via browser
-* Dedicated browser agent
-
-### 🔐 Advanced / Security Tools
-
-* TCP listener (educational use)
-* CamPhish launcher (educational / testing only)
+* Plugin system
+* Scheduler system
+* Background watchdog monitoring
 
 ---
 
-## 🛠️ Requirements
+# ⚠️ Legal & Ethical Notice
 
-### System
+Pentesting and exploitation features are intended **ONLY for:**
 
-* **Linux (GNOME recommended)**
-* Python **3.8+**
+* Personal labs
+* CTF environments
+* Authorized test systems
 
-### Python Libraries
+Do NOT use against unauthorized targets.
 
-```bash
-pip install speechrecognition pyautogui psutil pytesseract gtts playsound pillow pynput
+---
+
+# 🧱 Architecture Overview
+
+```
+Voice Input → Command Parser → Action Router → Modules
+                                     ├── AI Engine (Ollama)
+                                     ├── Automation Layer
+                                     ├── Pentest Tools
+                                     ├── Email System
+                                     ├── OCR Engine
+                                     ├── Macro Engine
+                                     └── Media Layer
 ```
 
-### System Dependencies
+---
+
+# 📦 Requirements
+
+## OS
+
+* Linux recommended (GNOME tested)
+* Wayland supported (portal screenshot method)
+* Windows partially supported (no full feature parity)
+
+---
+
+## System Packages
+
+Install core dependencies:
 
 ```bash
-sudo apt install mpv tesseract-ocr xdotool gnome-terminal
+sudo apt update
+
+sudo apt install -y \
+python3 python3-venv python3-pip \
+tesseract-ocr \
+mpv yt-dlp \
+nmap nikto gobuster whatweb \
+searchsploit metasploit-framework \
+zaproxy \
+xdotool gnome-terminal
 ```
 
-### Optional (AI Features)
+---
 
-* **Ollama**
-* DeepSeek model:
+# 🐍 Python Dependencies
+
+Create virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install packages:
+
+```bash
+pip install \
+psutil \
+pyautogui \
+pytesseract \
+SpeechRecognition \
+pillow \
+gtts \
+playsound \
+pynput \
+pyaudio
+```
+
+If PyAudio fails:
+
+```bash
+sudo apt install portaudio19-dev
+pip install pyaudio
+```
+
+---
+
+# 🧠 AI Model Setup (Ollama + DeepSeek)
+
+Install Ollama:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Pull model:
 
 ```bash
 ollama pull deepseek-r1:7b
 ```
 
+Test:
+
+```bash
+ollama run deepseek-r1:7b
+```
+
 ---
 
-## 🔐 Environment Variables
+# 📧 Email Setup
 
-Set your email credentials securely:
+Set environment variables:
 
 ```bash
 export JULI_EMAIL="your_email@gmail.com"
 export JULI_EMAIL_PASS="your_app_password"
 ```
 
-> ⚠️ Use **Gmail App Passwords**, not your main password.
+Use **Gmail App Password**, not your real password.
 
 ---
 
-## 🚀 How to Run
+# 🧾 File Structure
+
+```
+project/
+│
+├── assistant.py
+├── zap_module.py
+├── hand-mouse.py
+├── zap_web_ui.py
+│
+├── appointments.txt
+├── payments.txt
+├── system_errors.log
+│
+├── macros/
+├── pentest_scans/
+├── ctf_notes.txt
+```
+
+---
+
+# ▶️ Running JULI
 
 ```bash
-python3 juli.py
+python3 assistant.py
 ```
 
-Choose:
+Choose mode:
 
 ```
-1 → Voice Mode
-2 → Command Line Mode
+1 — Voice Mode
+2 — Command Line Mode
 ```
 
 ---
 
-## 🗣️ Example Commands
+# 🎤 Voice Command Format
+
+All commands must start with:
 
 ```
-juli send mail about project update
+juli <command>
+```
+
+Example:
+
+```
+juli date
 juli system status
-juli play song interstellar theme
 juli read screen
-juli record macro
-juli play macro
-juli motivate me
-juli education guidance
-juli list files
-juli search python automation
 ```
 
 ---
 
-## 📂 Project Files
+# 📚 Command Reference
 
-| File                   | Purpose            |
-| ---------------------- | ------------------ |
-| `juli.py`              | Main assistant     |
-| `appointments.txt`     | Saved appointments |
-| `payments.txt`         | Payment records    |
-| `support_requests.txt` | Support tickets    |
-| `system_errors.log`    | Error logs         |
-| `macro.json`           | Recorded macros    |
+## General
 
----
-
-## ⚠️ Disclaimer
-
-This project is intended for **personal productivity, automation, learning, and ethical security testing only**.
-Any misuse for unauthorized access or malicious activity is **strictly discouraged** and is the user’s responsibility.
+```
+juli date
+juli system status
+juli list files
+juli open directory
+juli search <term>
+juli browser search <term>
+juli close
+juli exit
+```
 
 ---
 
-## ❤️ Credits
+## AI
 
-* Python Open Source Community
-* Ollama + DeepSeek
-* Google Speech Recognition
-* GNOME & Linux ecosystem
+```
+juli code <prompt>
+juli read screen
+juli analyze errors
+juli motivate <text>
+juli comfort <text>
+juli smile <text>
+juli ask <question>
+```
 
 ---
 
-## 🌟 Future Improvements
+## Email
 
-* Plugin marketplace
+```
+juli mail <topic>
+```
+
+---
+
+## Productivity
+
+```
+juli rec appointment
+juli payment
+juli support
+juli education
+juli bus ticket
+```
+
+---
+
+## Media
+
+```
+juli song <name>
+juli mouse
+juli sign
+```
+
+---
+
+## Macro Automation
+
+```
+juli record macro <file>
+juli play macro <file>
+```
+
+Stop macro playback:
+
+```
+Press F8
+```
+
+---
+
+## Pentest Lab Commands
+
+```
+juli pentest nmap <target>
+juli pentest webscan <url>
+juli pentest enum linux
+juli pentest exploit search <term>
+juli pentest cve <id>
+juli pentest msf
+juli pentest checklist
+juli zap start
+juli zap spider <url>
+juli zap active <url>
+juli zap alerts
+```
+
+---
+
+# 🧠 OCR Screen Reading
+
+Uses:
+
+```
+GNOME portal screenshot → Tesseract → AI summary
+```
+
+First run will request screenshot permission.
+
+---
+
+# 🧩 Plugin System
+
+Add plugins with:
+
+```
+def commands():
+    return ["keyword"]
+
+def handle(command):
+    ...
+```
+
+They are auto-dispatched in command flow.
+
+---
+
+# ⏱ Scheduler
+
+Built-in:
+
+* Background system monitor
+* Daily error analysis
+* Interval jobs supported
+
+---
+
+# 🔒 Security Notes
+
+* Store email credentials via environment variables only
+* Never commit passwords
+* Pentest tools are lab-only
+* Macro playback can control your system — use carefully
+* AI code generation runs code automatically — sandbox recommended
+
+---
+
+# 🐞 Troubleshooting
+
+## PyAutoGUI Wayland Issues
+
+Switch to X11 session or install:
+
+```bash
+sudo apt install xdotool
+```
+
+---
+
+## Microphone Not Detected
+
+```bash
+arecord -l
+```
+
+Then configure ALSA / PulseAudio.
+
+---
+
+## Tesseract Not Found
+
+```bash
+which tesseract
+```
+
+Set path in code if needed.
+
+---
+
+# 🛣 Roadmap Ideas
+
 * GUI dashboard
-* Cross-platform support
-* Offline speech recognition
-* Encrypted data storage
+* Plugin marketplace
+* Encrypted config store
+* Remote agent mode
+* Multi-assistant orchestration
+* Web control panel
+* Docker deployment
 
 ---
 
+# 👨‍💻 Author
 
+Built for automation, AI experimentation, and security learning workflows.
+
+---
+
+# 📜 License
+
+Use responsibly. Lab + educational usage recommended.
+Add your preferred license file (MIT / Apache / GPL).
+
+---
